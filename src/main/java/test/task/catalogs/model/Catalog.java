@@ -15,9 +15,13 @@ public class Catalog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     @ManyToOne
     private Catalog fatherCatalog;
     @OneToMany
     private List<Catalog> childCatalogs;
-    private Long count;
+
+    public Long getFatherId() {
+        return fatherCatalog.getId();
+    }
 }

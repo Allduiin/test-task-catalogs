@@ -9,5 +9,9 @@ public interface CatalogRepository {
 
     Catalog get(Long id);
 
-    Catalog delete(Long id);
+    Catalog delete(Catalog catalog);
+
+    Boolean addChild(Long fatherId, Long childId);
+
+    Boolean removeChild(Long fatherId, Long childId);
 }
