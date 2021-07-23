@@ -7,7 +7,7 @@ public interface CatalogService {
 
     Catalog update(Catalog catalog);
 
-    Catalog get(Long id);
+    Catalog getById(Long id);
 
     Catalog delete(Long id);
 }

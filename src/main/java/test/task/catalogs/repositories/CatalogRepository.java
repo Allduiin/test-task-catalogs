@@ -7,7 +7,7 @@ public interface CatalogRepository {
 
     Catalog update(Catalog catalog);
 
-    Catalog get(Long id);
+    Catalog getById(Long id);
 
     Catalog delete(Catalog catalog);
 
