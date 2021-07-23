@@ -2,10 +2,10 @@ package test.task.catalogs.model;
 
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import lombok.Data;
@@ -17,20 +17,15 @@ public class Catalog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne
-    private Catalog fatherCatalog;
-    @OneToMany
+    private Long fatherId;
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Catalog> childCatalogs;
     @Transient
     private Long count;
 
-    public Long getFatherId() {
-        return fatherCatalog.getId();
-    }
-
     public Long getCount() {
-        return childCatalogs.size() + childCatalogs.stream()
+        return (childCatalogs != null) ? childCatalogs.size() + childCatalogs.stream()
                 .mapToLong(Catalog::getCount)
-                .sum();
+                .sum() : 0;
     }
 }

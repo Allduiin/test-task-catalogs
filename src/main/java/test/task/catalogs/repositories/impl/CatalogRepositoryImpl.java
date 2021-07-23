@@ -78,21 +78,11 @@ public class CatalogRepositoryImpl implements CatalogRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Error updating catalog", e);
+            throw new DataProcessingException("Error deleting catalog", e);
         } finally {
             if (session != null) {
                 session.close();
             }
         }
-    }
-
-    @Override
-    public Boolean addChild(Long fatherId, Long childId) {
-        return false;
-    }
-
-    @Override
-    public Boolean removeChild(Long fatherId, Long childId) {
-        return false;
     }
 }
