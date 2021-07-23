@@ -11,7 +11,6 @@ public class Main {
                 new AnnotationConfigApplicationContext(AppConfig.class);
         CatalogService catalogService = context.getBean(CatalogService.class);
 
-
         Catalog catalog = new Catalog();
         catalog.setName("Nadoelo");
 
