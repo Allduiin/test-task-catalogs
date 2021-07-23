@@ -18,8 +18,19 @@ public class Main {
 
         Catalog catalogChild = new Catalog();
         catalogChild.setName("Vasa");
-        catalogChild.setFatherCatalog(catalog);
+        catalogChild.setFatherId(catalog.getId());
         catalogService.create(catalogChild);
-        System.out.println("All works");
+
+        System.out.println(catalogService.getById(catalog.getId())
+                + "\n" + catalogService.getById(catalogChild.getId()));
+
+        catalogChild.setFatherId(null);
+        catalogChild.setName("updated catalog");
+        catalogService.update(catalogChild);
+
+        System.out.println("\n" + catalogService.getById(catalog.getId())
+                + "\n" + catalogService.getById(catalogChild.getId()));
+
+        System.out.println(catalogService.delete(catalogChild.getId()));
     }
 }

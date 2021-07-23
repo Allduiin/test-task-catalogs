@@ -10,8 +10,4 @@ public interface CatalogRepository {
     Catalog getById(Long id);
 
     Catalog delete(Catalog catalog);
-
-    Boolean addChild(Long fatherId, Long childId);
-
-    Boolean removeChild(Long fatherId, Long childId);
 }

@@ -13,7 +13,7 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public Catalog create(Catalog catalog) {
-        if (catalog.getFatherCatalog() != null) {
+        if (catalog.getFatherId() != null) {
             catalog = catalogRepository.add(catalog);
             addChild(catalog.getFatherId(), catalog.getId());
             return catalog;
@@ -24,14 +24,18 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public Catalog update(Catalog catalog) {
         Catalog oldCatalog = getById(catalog.getId());
-        if (oldCatalog.getFatherCatalog() == null) {
-            if (catalog.getFatherCatalog() != null) {
+        if (oldCatalog.getFatherId() == null) {
+            if (catalog.getFatherId() != null) {
                 addChild(catalog.getFatherId(), catalog.getId());
             }
         } else {
-            if (!catalog.getFatherId().equals(oldCatalog.getFatherId())) {
+            if (catalog.getFatherId() != null) {
+                if (!catalog.getFatherId().equals(oldCatalog.getFatherId())) {
+                    addChild(catalog.getFatherId(), catalog.getId());
+                    removeChild(oldCatalog.getFatherId(), catalog.getId());
+                }
+            } else {
                 removeChild(oldCatalog.getFatherId(), catalog.getId());
-                addChild(catalog.getFatherId(), catalog.getId());
             }
         }
         return catalogRepository.update(catalog);
@@ -46,8 +50,9 @@ public class CatalogServiceImpl implements CatalogService {
     public Catalog delete(Long id) {
         Catalog catalog = catalogRepository.getById(id);
         if (catalog.getCount() == 0) {
-            removeChild(catalog.getFatherId(), catalog.getId());
-            update(catalog.getFatherCatalog());
+            if (catalog.getFatherId() != null) {
+                removeChild(catalog.getFatherId(), catalog.getId());
+            }
             return catalogRepository.delete(catalog);
         }
         throw new RuntimeException("Catalog " + catalog
@@ -55,11 +60,16 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     private void removeChild(Long fatherId, Long childId) {
-        catalogRepository.removeChild(fatherId, childId);
+        Catalog father = catalogRepository.getById(fatherId);
+        father.getChildCatalogs().removeIf(c -> (c.getId().equals(childId)));
+        catalogRepository.update(father);
     }
 
     private void addChild(Long fatherId, Long childId) {
-        catalogRepository.addChild(fatherId, childId);
+        Catalog father = catalogRepository.getById(fatherId);
+        Catalog child = catalogRepository.getById(childId);
+        father.getChildCatalogs().add(child);
+        catalogRepository.update(father);
     }
 
 }
