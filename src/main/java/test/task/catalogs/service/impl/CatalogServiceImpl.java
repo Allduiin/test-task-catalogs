@@ -1,11 +1,13 @@
 package test.task.catalogs.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import test.task.catalogs.model.Catalog;
 import test.task.catalogs.repositories.CatalogRepository;
 import test.task.catalogs.service.CatalogService;
 
 @AllArgsConstructor
+@Service
 public class CatalogServiceImpl implements CatalogService {
     private final CatalogRepository catalogRepository;
 
@@ -21,7 +23,7 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public Catalog update(Catalog catalog) {
-        Catalog oldCatalog = get(catalog.getId());
+        Catalog oldCatalog = getById(catalog.getId());
         if (oldCatalog.getFatherCatalog() == null) {
             if (catalog.getFatherCatalog() != null) {
                 addChild(catalog.getFatherId(), catalog.getId());
@@ -36,16 +38,16 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public Catalog get(Long id) {
-        return catalogRepository.get(id);
+    public Catalog getById(Long id) {
+        return catalogRepository.getById(id);
     }
 
     @Override
     public Catalog delete(Long id) {
-        Catalog catalog = catalogRepository.get(id);
-        catalog.getFatherCatalog().getChildCatalogs().remove(catalog);
-        update(catalog.getFatherCatalog());
-        if (catalog.getChildCatalogs().isEmpty()) {
+        Catalog catalog = catalogRepository.getById(id);
+        if (catalog.getCount() == 0) {
+            removeChild(catalog.getFatherId(), catalog.getId());
+            update(catalog.getFatherCatalog());
             return catalogRepository.delete(catalog);
         }
         throw new RuntimeException("Catalog " + catalog
