@@ -15,7 +15,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 @PropertySource("classpath:db.properties")
 @ComponentScan(basePackages = {
         "test.task.catalogs.repositories",
-        "test.task.catalogs.service"
+        "test.task.catalogs.service",
+        "test.task.catalogs.mapper"
 })
 @AllArgsConstructor
 public class AppConfig {
