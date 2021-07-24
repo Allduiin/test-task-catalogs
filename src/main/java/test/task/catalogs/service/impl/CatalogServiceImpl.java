@@ -2,6 +2,7 @@ package test.task.catalogs.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import test.task.catalogs.exceptions.ServiceProcessingException;
 import test.task.catalogs.model.Catalog;
 import test.task.catalogs.repositories.CatalogRepository;
 import test.task.catalogs.service.CatalogService;
@@ -55,7 +56,7 @@ public class CatalogServiceImpl implements CatalogService {
             }
             return catalogRepository.delete(catalog);
         }
-        throw new RuntimeException("Catalog " + catalog
+        throw new ServiceProcessingException("Catalog " + catalog
                 + " can not be deleted because it have inner catalogs");
     }
 
